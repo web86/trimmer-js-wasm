@@ -1,89 +1,118 @@
-<!doctype html><html lang="en">
-    <head>
-        <meta charset="utf-8"/>
-        <meta http-equiv="origin-trial" content="AoAL7wVI5uz0/bL0F5b4X/RvPDsjfiTh6iAxI0b8YQpJcEgwD4KLXbH4/T9bVvjXlK7ekuW5R6wJvLcgWUp0BQkAAAB4eyJvcmlnaW4iOiJodHRwczovL3ZpZGVvLndlYjg2LnJ1OjQ0MyIsImZlYXR1cmUiOiJVbnJlc3RyaWN0ZWRTaGFyZWRBcnJheUJ1ZmZlciIsImV4cGlyeSI6MTY1ODg3OTk5OSwiaXNTdWJkb21haW4iOnRydWV9">
-        <!-- You can get your token from here https://developer.chrome.com/origintrials/#/view_trial/303992974847508481 -->
-        <meta name="viewport" content="width=device-width,initial-scale=1"/>
-        <title>Simple video trimmer ffmpeg</title>
-        <!-- https://codepen.io/JackT2/pen/PKvVoK -->
-        <link href="/styles.css" rel="stylesheet">
-        
-    </head>
-    <body>
-        <div class="all start">
-            <div class="sidebar">
-                <div>
-                    <h3>Safely.</h3>
-                    <p>The video is cut directly on your computer in the browser (does not go to the server).</p>
-                </div>
-                <div>
-                    <h3>Instantly.</h3>
-                    <p>The video is cropped and saved on the fly without changing the encoding of the file and its size</p> 
-                </div> 
-                <div>
-                    <h3>Very easy.</h3>
-                    <p>Select a video, specify where to cut, save</p> 
-                </div>
-                
-            </div>
-            <div class="background img">
-                <h3 class="title">Cut off the unnecessary part of the<br>video from the end</h3>
-               
-                
-                <div id="input-video-area" class="hide">
-                    <div class="custom-video-area" id="custom-popout-video">
-                        <div class="video-controls control">
-                            <div class="top-wrapper">
-                              <div class="progress-bar">
-                                <span class="buffer-bar"></span>
-                                <span class="time-bar"></span>
-                              </div>
-                            </div>
-                        
-                            <div class="row">
-                              <div class="column">
-                                <div class="bottom-wrapper">
-                                  <div class="play-button mini" title="Play/Pause Video">
-                                      
-                                  </div>
-                                  <div class="time">
-                                    <span class="current">00:00</span> / <span class="duration">00:00</span>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                        </div>
-                        <video id="input-video" class="video-element" preload="auto"></video>
-                    </div>
-                    <button  id="trim">Let's trim!</button>  
-                </div>
-                
-                
-                <video id="output-video" preload="auto" controls autoplay></video>
-                  
-                  <div id="inputs">
-                      <p style="color: #999;">Download the video from your computer</p>
-                      <div class="block"><input type="file" id="uploader" /></div>
-                      <center style="font-size: 20px;font-weight: bold;">OR</center>
-                      <p style="color: #999;">Enter the link to the video</p>
-                      <div class="block"><input type="text" id="weblink" placeholder="https://site.com/video.mp4" value="" /><button id="uploadlink">Upload and trim!</button></div>
-                      
-                  </div> 
-                  <div >
-                      <h3 id="message"></h3>
-                      
-                      <a id="download"></a>
-                  </div>      
-                  <p> <span id="oldDuration"></span><br><span id="newDuration"></span></p>
-                  <p id="cleaning"></p>
-              </div>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      http-equiv="origin-trial"
+      content="AoAL7wVI5uz0/bL0F5b4X/RvPDsjfiTh6iAxI0b8YQpJcEgwD4KLXbH4/T9bVvjXlK7ekuW5R6wJvLcgWUp0BQkAAAB4eyJvcmlnaW4iOiJodHRwczovL3ZpZGVvLndlYjg2LnJ1OjQ0MyIsImZlYXR1cmUiOiJVbnJlc3RyaWN0ZWRTaGFyZWRBcnJheUJ1ZmZlciIsImV4cGlyeSI6MTY1ODg3OTk5OSwiaXNTdWJkb21haW4iOnRydWV9"
+    />
+    <!-- You can get your token from here https://developer.chrome.com/origintrials/#/view_trial/303992974847508481 -->
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="Access-Control-Allow-Origin" value="*" />
+    <meta name="theme-color" content="#000000" />
+    <meta name="description" content="" />
+
+    <title>Simple video cropper ffmpeg without server</title>
+    <!-- https://codepen.io/JackT2/pen/PKvVoK -->
+    <link href="/styles.css" rel="stylesheet" />
+  </head>
+  <body>
+    <div class="all start">
+      <div class="sidebar">
+        <div>
+          <h3>Safely.</h3>
+          <p>
+            The video is cut directly on your computer in the browser (does not
+            go to the server).
+          </p>
+        </div>
+        <div>
+          <h3>Instantly.</h3>
+          <p>
+            The video is cropped and saved on the fly without increase of size
+          </p>
+        </div>
+        <div>
+          <h3>Very easy.</h3>
+          <p>Select a video, specify where to croppe, save</p>
+        </div>
       </div>
-      
-      
-      
-      <script src='https://unpkg.com/@ffmpeg/ffmpeg@0.9.3/dist/ffmpeg.min.js'></script>
-     <script src='/script.js'></script>
-     
-    
-    </body>
+      <div class="background img">
+        <h3 class="title">Video cropper</h3>
+
+        <div id="input-video-area" class="hide">
+          <div class="custom-video-area" id="custom-popout-video">
+            <div class="video-controls control">
+              <div class="top-wrapper">
+                <div class="progress-bar">
+                  <span class="buffer-bar"></span>
+                  <span class="time-bar"></span>
+                </div>
+                <div class="progress-bar-left">
+                  <span class="time-bar-left"></span>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="column">
+                  <div class="bottom-wrapper">
+                    <div
+                      class="play-button mini"
+                      title="Play/Pause Video"
+                    ></div>
+                    <div class="time">
+                      <span class="current">00:00</span> /
+                      <span class="duration">00:00</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <video
+              id="input-video"
+              class="video-element"
+              preload="auto"
+            ></video>
+          </div>
+          <button id="trim">let's croppe!</button>
+        </div>
+
+        <video id="output-video" preload="auto" controls autoplay></video>
+
+        <div id="inputs">
+          <p style="color: #999">Download the video from your computer</p>
+          <div class="block"><input type="file" id="uploader" /></div>
+          <center style="font-size: 20px; font-weight: bold">OR</center>
+          <p style="color: #999">Enter a link to the video</p>
+          <div class="block">
+            <input
+              type="text"
+              id="weblink"
+              placeholder="https://site.com/video.mp4"
+              value=""
+            /><button id="uploadlink">Закачать и обрезать!</button>
+          </div>
+        </div>
+        <div>
+          <h3 id="message"></h3>
+
+          <a id="download"></a>
+        </div>
+        <p>
+          <span id="oldDuration"></span><br /><span id="newDuration"></span>
+        </p>
+        <p id="cleaning"></p>
+      </div>
+    </div>
+
+    <div class="modal hide">
+      <div>
+        <h4 style="text-align: center">Select quality:</h4>
+        <div class="selectQuality"></div>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/@ffmpeg/ffmpeg@0.9.3/dist/ffmpeg.min.js"></script>
+    <script src="/script.js"></script>
+  </body>
 </html>
